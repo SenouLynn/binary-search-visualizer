@@ -15,8 +15,9 @@ export default function Grid(props) {
 
 
 
-    let newMin;
-    let newMax;
+
+    let [newMin, setNewMin] = useState(initialMin)
+    let [newMax, setNewMax] = useState(initialMax)
     let newGuess;
 
 
@@ -48,8 +49,8 @@ export default function Grid(props) {
 
         //newMin/newMax will be undefined on first go
         if (!newMin && !newMax) {
-            newMin = initialMin;
-            newMax = initialMax;
+            setNewMin(initialMin)
+            setNewMax(initialMax);
 
             randomNum()
 
@@ -104,8 +105,8 @@ export default function Grid(props) {
     //Change minimum
     //Add class to GuessNum box
     function changeMin() {
-        console.log("Changing")
-        newMin = newGuess
+        console.log("Changing min to", newMin, newGuess)
+        setNewMin(newGuess)
         createDivs()
 
         //Until Timed function is armed this needs to be commented out
@@ -117,7 +118,7 @@ export default function Grid(props) {
     //Change maximum
     //Add class to GuessNum box 
     function changeMax() {
-        newMax = newGuess
+        setNewMax(newGuess)
         createDivs()
 
 
@@ -148,12 +149,12 @@ export default function Grid(props) {
         console.log("gridArray in create: ", gridArray)
         gridArray.forEach((num) => {
             // console.log(subMinArr)
-            if (num < newMin) {
+            if (num <= newMin) {
                 minArr.push(num)
-            } else if (num <= newMax && num >= newMin) {
+            } else if (num < newMax && num > newMin) {
                 midArr.push(num)
             }
-            else if (num > newMax) {
+            else if (num >= newMax) {
                 maxArr.push(num)
             }
         })
