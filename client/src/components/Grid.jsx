@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Builder from './Builder'
 
@@ -20,7 +20,9 @@ export default function Grid(props) {
 
     let [newMin, setNewMin] = useState(initialMin)
     let [newMax, setNewMax] = useState(initialMax)
+
     let newGuess;
+    let [guessState, setGuessState] = useState()
 
 
     let [subMinArr, setSubMinArr] = useState([]);
@@ -28,6 +30,8 @@ export default function Grid(props) {
     let [superMaxArr, setSuperMaxArr] = useState([]);
 
     let [turnCounter, setTurnCounter] = useState(0)
+
+
 
 
 
@@ -49,6 +53,9 @@ export default function Grid(props) {
     function startSearch() {
         console.log("You started your search")
 
+        //Turns off timer function until loop has run
+        setTrigger(false)
+
         //newMin/newMax will be undefined on first go
         if (!newMin && !newMax) {
             setNewMin(initialMin)
@@ -63,13 +70,21 @@ export default function Grid(props) {
         setTurnCounter(turnCounter + 1)
     }
 
-    //TESTING: will be replaced by a timed function later on. 
-    //Preventing infinite loops
-    function guessSearch() {
-        console.log("Range is now", newMin, "to ", newMax)
-        startSearch()
-        setTurnCounter(turnCounter + 1)
-    }
+
+
+    let [trigger, setTrigger] = useState(false)
+    //Timer function 
+    //Right now it's not on a loop, it will run after a certain amount of time hoping that react has figured it's shit out in time
+    useEffect(() => {
+        if (trigger && middleArr && !winCondition) {
+            const timer = setTimeout(() => {
+                console.log("inside timer")
+                startSearch()
+                setTurnCounter(turnCounter + 1)
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    });
 
     //Generates a random number within range
     function randomNum() {
@@ -79,7 +94,10 @@ export default function Grid(props) {
         if (turnCounter > 1) {
             inclusive = 0
         }
+
         newGuess = Math.floor(Math.random() * (newMax - newMin + inclusive) + newMin)
+
+        setGuessState(newGuess)
         console.log(newGuess)
 
         checkNum()
@@ -90,7 +108,6 @@ export default function Grid(props) {
     //If guessNum is incorrect AND larger than the target number then...
     function checkNum() {
         console.log("Checknum newGuess: ", newGuess)
-        createDivs()
         if (newGuess !== initialNum && newGuess < initialNum) {
             console.log("random number is less than target number")
             setNewMin(newGuess)
@@ -105,21 +122,8 @@ export default function Grid(props) {
             setWinCondition(true)
         }
 
+        createDivs()
     }
-
-
-  
-
-    //IDEA: from the grid array 
-    //if num >= new min then grey out
-    //if num <= new max then grey out 
-    //if num === guessNum & num < than targetNum then do add "smaller than guessnum" class
-    //if num === guessNum & num > than targetNum then add "greater than guessnum" class
-    //if num === guessNum & num === targetNum then add "winning condition"
-
-    //May have to create a separate map function => looks like you might need to do that in a separate component
-    //To do that I'll have create new array or slice off old array
-
 
     function createDivs() {
         //reset divs
@@ -158,22 +162,40 @@ export default function Grid(props) {
 
         }
 
+        //Set arrays for classes
         setSubMinArr(minArr)
         setMiddleArr(midArr)
         setSuperMaxArr(maxArr)
 
+
+        //Grid Array Reset
         gridArray = []
+
+        //Toggle Trigger to reset timer
+        setTrigger(true)
     }
 
+    //Pause search but preserve state
+    function pauseSearch (){
+        setTrigger(false)
+    }
+
+
+    console.log(middleArr)
     return (
         <div id="grid">
             <h3>Grid Area</h3>
             <button onClick={startSearch}>Start Search</button>
-            <p>Number of turns: {turnCounter}</p>
+            <button onClick={pauseSearch}>Pause</button>
+            <div className="info-box">
+                <p>Number of turns: {turnCounter}</p>
+                <p>Computer Guess: {guessState}</p>
+                <p>Minimum: {newMin}</p>
+                <p>Maximum: {newMax}</p>
+            </div>
 
             <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} middleArr={middleArr} isWon={winCondition} />
 
-            <button onClick={guessSearch}>Guess!</button>
         </div>
     )
 }

@@ -3,11 +3,9 @@
 }
 
 #grid {
-
-
-
   max-width: 800px;
 }
+
 .grid-container {
 
   display: flex;
@@ -36,4 +34,9 @@
 
 .winClass{
   background-color: red;
+}
+
+.info-box {
+  display: flex;
+  justify-content: space-between;
 }
