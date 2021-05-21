@@ -13,6 +13,8 @@ export default function Grid(props) {
 
     let gridArray = []
 
+    let [winCondition, setWinCondition] = useState(false)
+
 
 
 
@@ -71,10 +73,13 @@ export default function Grid(props) {
 
     //Generates a random number within range
     function randomNum() {
-        console.log("Getting Random Number")
         console.log("Inside number generator, min and max are: ", newMin, "and ", newMax)
 
-        newGuess = Math.floor(Math.random() * (newMax - newMin + 1) + newMin)
+        let inclusive = 1
+        if (turnCounter > 1) {
+            inclusive = 0
+        }
+        newGuess = Math.floor(Math.random() * (newMax - newMin + inclusive) + newMin)
         console.log(newGuess)
 
         checkNum()
@@ -85,47 +90,25 @@ export default function Grid(props) {
     //If guessNum is incorrect AND larger than the target number then...
     function checkNum() {
         console.log("Checknum newGuess: ", newGuess)
-
+        createDivs()
         if (newGuess !== initialNum && newGuess < initialNum) {
             console.log("random number is less than target number")
-            changeMin()
+            setNewMin(newGuess)
 
         } else if (newGuess !== initialNum && newGuess > initialNum) {
             console.log("random number is greater than target number")
-            changeMax()
+            setNewMax(newGuess)
 
         } else if (newGuess === initialNum) {
             console.log("Winning condition")
+
+            setWinCondition(true)
         }
 
     }
 
 
-    //If newGuess < initialNum
-    //Change minimum
-    //Add class to GuessNum box
-    function changeMin() {
-        console.log("Changing min to", newMin, newGuess)
-        setNewMin(newGuess)
-        createDivs()
-
-        //Until Timed function is armed this needs to be commented out
-        // guessSearch()
-    }
-
-
-    //If newGuess > initialNum 
-    //Change maximum
-    //Add class to GuessNum box 
-    function changeMax() {
-        setNewMax(newGuess)
-        createDivs()
-
-
-        //Until Timed function is armed this needs to be commented out
-        // guessSearch()
-    }
-
+  
 
     //IDEA: from the grid array 
     //if num >= new min then grey out
@@ -144,20 +127,36 @@ export default function Grid(props) {
         let midArr = [];
         let maxArr = [];
 
-        console.log("newMin inside create:, ", newMin)
-        console.log("newMax inside create:, ", newMax)
-        console.log("gridArray in create: ", gridArray)
-        gridArray.forEach((num) => {
-            // console.log(subMinArr)
-            if (num <= newMin) {
-                minArr.push(num)
-            } else if (num < newMax && num > newMin) {
-                midArr.push(num)
-            }
-            else if (num >= newMax) {
-                maxArr.push(num)
-            }
-        })
+        if (newGuess !== initialNum) {
+            gridArray.forEach((num) => {
+                // console.log(subMinArr)
+                if (num < newMin) {
+                    minArr.push(num)
+                } else if (num <= newMax && num >= newMin) {
+                    midArr.push(num)
+                }
+                else if (num > newMax) {
+                    maxArr.push(num)
+                }
+            })
+        } else if (newGuess === initialNum) {
+
+            //Set up Winning Condition 
+
+            gridArray.forEach((num) => {
+                // console.log(subMinArr)
+                if (num < newGuess) {
+                    minArr.push(num)
+                } else if (num === newGuess) {
+                    midArr.push(num)
+                }
+                else if (num > newGuess) {
+                    maxArr.push(num)
+                }
+            })
+
+
+        }
 
         setSubMinArr(minArr)
         setMiddleArr(midArr)
@@ -165,9 +164,6 @@ export default function Grid(props) {
 
         gridArray = []
     }
-    console.log("Grid: subMinArr: ", subMinArr)
-    console.log("Grid: middleArr: ", middleArr)
-    console.log("Grid: superMaxArr: ", superMaxArr)
 
     return (
         <div id="grid">
@@ -175,7 +171,7 @@ export default function Grid(props) {
             <button onClick={startSearch}>Start Search</button>
             <p>Number of turns: {turnCounter}</p>
 
-            <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} middleArr={middleArr} />
+            <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} middleArr={middleArr} isWon={winCondition} />
 
             <button onClick={guessSearch}>Guess!</button>
         </div>

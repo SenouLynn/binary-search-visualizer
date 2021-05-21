@@ -4,15 +4,17 @@ import React from 'react'
 //Builder is solely to pass array info to to build appropriate classes for boxes after arrays have been passed
 export default function Builder(props) {
 
-    let gridArray = props.gridArray
     let subMinArr = props.subMinArr
     let middleArr = props.middleArr
     let superMaxArr = props.superMaxArr
 
+    let isWon = props.isWon
+    let winClass = ""
+    console.log(isWon)
+    if(isWon){
+        winClass = "winClass"
+    }
 
-    console.log("Builder: subMinArr: ", props.subMinArr)
-    console.log("Builder: middleArr: ", middleArr)
-    console.log("Builder: superMaxArr: ", superMaxArr)
 
     return (
         <div className="grid-container">
@@ -30,8 +32,9 @@ export default function Builder(props) {
             }) : ''}
 
             {middleArr ? middleArr.map((num) => {
+
                 return (
-                    <div key={num} className={"gridbox"}>{num}</div>
+                    <div key={num} className={`gridbox ${winClass}`}>{num}</div>
                 )
             }) : ''}
 
