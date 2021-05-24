@@ -9,21 +9,28 @@ export default function Builder(props) {
     let superMaxArr = props.superMaxArr
 
     let isWon = props.isWon
-    let winClass = ""
+    let highlightClass = "";
+
+    let showLessThan = props.showLessThan
+    let showLessThanClass = ""
+    let showLessThanSymbol = ""
+
+    let showMoreThan = props.showMoreThan
+    let showMoreThanClass = ""
+    let showMOreThanSymbol = ""
+
     console.log(isWon)
     if(isWon){
-        winClass = "winClass"
+        highlightClass = "winClass"
+    } else if(showLessThan){
+        highlightClass = "notWinClass"
+    } else if (showMoreThan){
+        highlightClass = "notWinClass"
     }
 
 
     return (
         <div className="grid-container">
-
-            {/* {gridArray.map((num) => {
-                return (
-                    <div key={num} className={"gridbox"}>{num}</div>
-                )
-            })} */}
 
             {subMinArr ? subMinArr.map((num) => {
                 return (
@@ -32,9 +39,14 @@ export default function Builder(props) {
             }) : ''}
 
             {middleArr ? middleArr.map((num) => {
-
+                //Toggle content
+                if(showLessThan){
+                    num = "<"
+                } else if (showMoreThan){
+                    num = ">"
+                }
                 return (
-                    <div key={num} className={`gridbox ${winClass}`}>{num}</div>
+                    <div key={num} className={`gridbox ${highlightClass}`}>{num}</div>
                 )
             }) : ''}
 

@@ -36,6 +36,10 @@
   background-color: red;
 }
 
+.notWinClass {
+  background-color: blue;
+}
+
 .info-box {
   display: flex;
   justify-content: space-between;

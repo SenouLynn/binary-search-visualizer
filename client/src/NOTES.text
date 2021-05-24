@@ -1,3 +1,7 @@
 Where I left off:
 
-There's an issue setting minimum and maxes => might need to set them in state
+Trying to set a timer for
+- computer guesses a number
+- then checks number and updates min/maxex
+- then if num is > or < than target, num is initially pushed to mid arr, then every other number gets pushed to submin or super max arr
+- then create divs

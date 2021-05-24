@@ -7,24 +7,23 @@ export default function Home() {
     let [initialNum, setInitialNum] = useState("")
 
     //Set The Desired Range
-    //For now it will be between 1 and 100 for ease of sake
     let [rangeMin, setRangeMin] = useState("")
     let [rangeMax, setRangeMax] = useState("")
+
+    //Set Timer in milliseconds
+    let [timer, setTimer] = useState("")
 
 
     //Start Button//
     let [startGrid, setStartGrid] = useState()
     function startHandler() {
-        console.log("Start Handler Input", typeof (parseInt(initialNum)), initialNum)
-        console.log("Start Handler rangeMin", typeof (parseInt(rangeMin)), rangeMin)
-        console.log("Start Handler rangeMax", typeof (parseInt(rangeMax)), rangeMax)
 
-        setStartGrid ( <Grid rangeMin={parseInt(rangeMin)} rangeMax={parseInt(rangeMax)} initialNum = {parseInt(initialNum)}/> )
+        setStartGrid ( <Grid rangeMin={parseInt(rangeMin)} rangeMax={parseInt(rangeMax)} initialNum = {parseInt(initialNum)} timer={timer}/> )
     }   
 
     //Disables Start Unless conditions are met
     let disabledVar;
-    let rangeCheckAlert = []
+
     if (rangeMin &&
         rangeMax &&
         initialNum &&
@@ -39,6 +38,17 @@ export default function Home() {
         disabledVar = true
     }
 
+    //Reset Button
+    
+    function resetBoard() {
+        setInitialNum("")
+        setRangeMin("")
+        setRangeMax("")
+        setTimer("")
+
+        setStartGrid ()
+    }
+
     return (
         <div>
             <div>
@@ -51,12 +61,18 @@ export default function Home() {
 
             <p>Choose your number between the range click "Begin"</p>
             <input type="number" value={initialNum} onChange={event => setInitialNum(event.target.value)}></input>
+
+            <p>How slow would you like the timer to be? Write in seconds: </p>
+            <input type="number" value={timer} onChange={event => setTimer(event.target.value)}></input>
             <button disabled={disabledVar} onClick={startHandler}>Begin</button>
-            <p> {rangeCheckAlert} </p>
+    
             </div>
 
             {startGrid}
           
+            <div>
+                <button onClick={resetBoard}>Reset</button>
+            </div>
 
         </div>
     )
