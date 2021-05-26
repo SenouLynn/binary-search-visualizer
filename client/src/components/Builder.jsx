@@ -1,12 +1,18 @@
 import React from 'react'
+import { useState } from 'react'
 
 
 //Builder is solely to pass array info to to build appropriate classes for boxes after arrays have been passed
 export default function Builder(props) {
 
     let subMinArr = props.subMinArr
+    let showCaseArr = props.showCaseArr
+    let subMidArr = props.subMidArr
     let middleArr = props.middleArr
+    let superMidArr = props.superMidArr
     let superMaxArr = props.superMaxArr
+
+    console.log(showCaseArr)
 
     let isWon = props.isWon
     let highlightClass = "";
@@ -20,17 +26,24 @@ export default function Builder(props) {
     let showMOreThanSymbol = ""
 
     console.log(isWon)
-    if(isWon){
+    if (isWon) {
         highlightClass = "winClass"
-    } else if(showLessThan){
+    } else if (showLessThan) {
         highlightClass = "notWinClass"
-    } else if (showMoreThan){
+    } else if (showMoreThan) {
         highlightClass = "notWinClass"
     }
 
+ 
 
+    console.log("submidarray", subMidArr)
+    console.log("showcasearr", showCaseArr)
+    console.log("middlearr", middleArr)
+    console.log("superMidarr", superMidArr)
     return (
         <div className="grid-container">
+
+            {/* grey out numbers below minimum */}
 
             {subMinArr ? subMinArr.map((num) => {
                 return (
@@ -38,11 +51,21 @@ export default function Builder(props) {
                 )
             }) : ''}
 
-            {middleArr ? middleArr.map((num) => {
+            {/* white numbers below guess but above minimum */}
+
+            {
+                subMidArr ? subMidArr.map((num) => {
+                    return (
+                        <div key={num} className={`gridbox`}>{num}</div>
+                    )
+                }) : ''
+            }
+
+            {showCaseArr ? showCaseArr.map((num) => {
                 //Toggle content
-                if(showLessThan){
+                if (showLessThan) {
                     num = "<"
-                } else if (showMoreThan){
+                } else if (showMoreThan) {
                     num = ">"
                 }
                 return (
@@ -50,8 +73,28 @@ export default function Builder(props) {
                 )
             }) : ''}
 
-            {superMaxArr ? superMaxArr.map((num)=>{
-                return(
+            {/* white numbers below guess but above minimum */}
+
+             {
+                superMidArr ? superMidArr.map((num) => {
+                    return (
+                        <div key={num} className={`gridbox`}>{num}</div>
+                    )
+                }) : ''
+            } 
+
+            
+            {middleArr ? middleArr.map((num) => {
+                //Toggle content
+
+
+                return (
+                    <div key={num} className={`gridbox ${highlightClass}`}>{num}</div>
+                )
+            }) : ''}
+
+            {superMaxArr ? superMaxArr.map((num) => {
+                return (
                     <div key={num} className={"gridbox grey"}>{num}</div>
                 )
             }) : ''}

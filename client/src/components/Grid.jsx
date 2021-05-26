@@ -27,9 +27,15 @@ export default function Grid(props) {
     let newGuess;
     let [guessState, setGuessState] = useState()
 
+    //Will push to classes in child component
+    let [showCaseArr, setShowCaseArr] = useState([])
 
     let [subMinArr, setSubMinArr] = useState([]);
+
+    let [subMidArr, setSubMidArr] = useState([])
     let [middleArr, setMiddleArr] = useState([]);
+    let [superMidArr, setSuperMidArr] = useState([])
+
     let [superMaxArr, setSuperMaxArr] = useState([]);
 
     let [turnCounter, setTurnCounter] = useState(0)
@@ -74,14 +80,22 @@ export default function Grid(props) {
     }
 
     //Showguess Timer function
-    let [showGuessTrigger, setShowGuessTrigger] = useState(false)
-    
+    let [createDivTrigger, setCreateDivTrigger] = useState(false)
+
     //Toggle on to start showGuess function
     useEffect(() => {
-        if(showGuessTrigger && !winCondition){
-            const guessTimer = setTimeout (() => {
-                showGuess()
-                
+        if (createDivTrigger && !winCondition) {
+            const guessTimer = setTimeout(() => {
+
+                //Reset showcase Arrays
+                setShowLessThan(false)
+                setShowMoreThan(false)
+                setSubMidArr([])
+                setShowCaseArr([])
+                setSuperMidArr([])
+
+                createDivs()
+
             }, timerInput);
             return () => clearTimeout(guessTimer);
         }
@@ -93,7 +107,6 @@ export default function Grid(props) {
     useEffect(() => {
         if (trigger && middleArr && !winCondition) {
             const timer = setTimeout(() => {
-                console.log("inside timer")
                 startSearch()
                 setTurnCounter(turnCounter + 1)
             }, timerInput);
@@ -107,16 +120,67 @@ export default function Grid(props) {
 
         let inclusive = 1
         if (turnCounter > 1) {
-            inclusive = 0
+            inclusive = 1
         }
 
         newGuess = Math.floor(Math.random() * (newMax - newMin + inclusive) + newMin)
 
         setGuessState(newGuess)
-        console.log(newGuess)
+        console.log("randomNum newguess: ", newGuess)
 
-        // checkNum()
         showGuess()
+    }
+
+
+
+    function showGuess() {
+
+        setMiddleArr([])
+        console.log(newMin, newMax)
+        //reset divs
+
+        let subMidArray = []
+        let showArr = []
+        let superMidArray = []
+
+
+
+
+        gridArray.forEach((num) => {
+
+
+            if (num < newGuess && num >= newMin) {
+                subMidArray.push(num)
+            } else if (num > newGuess && num <= newMax) {
+                superMidArray.push(num)
+            } else if (num === newGuess && newGuess === initialNum) {
+                showArr.push(num)
+                setWinCondition(true)
+            } else if (num === newGuess && newGuess > initialNum) {
+                showArr.push(num)
+                setShowLessThan(true)
+            } else if (num === newGuess && newGuess < initialNum) {
+                showArr.push(num)
+                setShowMoreThan(true)
+            }
+
+
+        })
+
+        //Set arrays for classes
+        setSubMidArr(subMidArray)
+        setShowCaseArr(showArr)
+        setSuperMidArr(superMidArray)
+
+
+        //Grid Array Reset
+        gridArray = []
+
+
+
+
+        checkNum()
+
     }
 
     //Check if number is the right one
@@ -126,11 +190,11 @@ export default function Grid(props) {
         console.log("Checknum newGuess: ", newGuess)
         if (newGuess !== initialNum && newGuess < initialNum) {
             console.log("random number is less than target number")
-            setNewMin(newGuess)
+            setNewMin(newGuess + 1)
 
         } else if (newGuess !== initialNum && newGuess > initialNum) {
             console.log("random number is greater than target number")
-            setNewMax(newGuess)
+            setNewMax(newGuess - 1)
 
         } else if (newGuess === initialNum) {
             console.log("Winning condition")
@@ -138,54 +202,15 @@ export default function Grid(props) {
             setWinCondition(true)
         }
 
-        createDivs()
 
-        //Toggle show guess trigger to initialize
-        // setShowGuessTrigger(true)
-    }
-
-    function showGuess() {
-        //toggle showguess timer
-
-         //reset divs
-         let midArr = [];
-
-
-         gridArray.forEach((num) => {
-    
-            if(num === newGuess && newGuess === initialNum){
-                midArr.push(num)
-                setWinCondition(true)
-            } else if (num === newGuess && newGuess > initialNum){
-                midArr.push(num)
-                setShowLessThan(true)
-            } else if (num === newGuess && newGuess < initialNum){
-                midArr.push(num)
-                setShowMoreThan(true)
-            }
-        })
-
-
-         //Set arrays for classes
-        setMiddleArr(midArr)
-
-
-
-
-        //Grid Array Reset
-        gridArray = []
-
+        // createDivs()
         //Turn Toggle off after this has run once
-        setShowGuessTrigger(false)
-
-        //Might need to set up another timer function to call createdivs
-        //createDivs()
-
-
-
+        setCreateDivTrigger(true)
     }
 
     function createDivs() {
+
+
         //reset divs
         let minArr = [];
         let midArr = [];
@@ -193,7 +218,7 @@ export default function Grid(props) {
 
         if (newGuess !== initialNum) {
             gridArray.forEach((num) => {
-        
+
                 if (num < newMin) {
                     minArr.push(num)
                 } else if (num <= newMax && num >= newMin) {
@@ -208,7 +233,7 @@ export default function Grid(props) {
             //Set up Winning Condition 
 
             gridArray.forEach((num) => {
-    
+
                 if (num < newGuess) {
                     minArr.push(num)
                 } else if (num === newGuess) {
@@ -222,6 +247,8 @@ export default function Grid(props) {
 
         }
 
+
+
         //Set arrays for classes
         setSubMinArr(minArr)
         setMiddleArr(midArr)
@@ -231,17 +258,17 @@ export default function Grid(props) {
         //Grid Array Reset
         gridArray = []
 
-        //Toggle Trigger to reset timer
+        //Toggle Trigger to reset timer and turn off creatediv
+        setCreateDivTrigger(false)
         setTrigger(true)
     }
 
     //Pause search but preserve state
-    function pauseSearch (){
+    function pauseSearch() {
         setTrigger(false)
     }
 
 
-    console.log(middleArr)
     return (
         <div id="grid">
             <h3>Grid Area</h3>
@@ -254,7 +281,7 @@ export default function Grid(props) {
                 <p>Maximum: {newMax}</p>
             </div>
 
-            <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} middleArr={middleArr} isWon={winCondition} showLessThan={showLessThan} showMoreThan={showMoreThan}/>
+            <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} subMidArr={subMidArr} middleArr={middleArr} superMidArr={superMidArr} showCaseArr={showCaseArr} isWon={winCondition} showLessThan={showLessThan} showMoreThan={showMoreThan} />
 
         </div>
     )
