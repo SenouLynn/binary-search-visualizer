@@ -1,0 +1,43 @@
+
+  .grid-container {
+  
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .gridbox{
+    height: 15px;
+    width: 15px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    padding: 1rem;
+    margin: .5rem;
+    
+
+    background-color: $highlight-grey;
+
+    color: $dark-grey;
+
+  }
+
+
+  
+
+.grey {
+    background-color: $light-grey;
+    color: $highlight-grey
+  }
+  
+  .winClass{
+    background-color: $red;
+  }
+  
+  .notWinClass {
+    background-color: $dark-blue;
+    color: $red;
+  }

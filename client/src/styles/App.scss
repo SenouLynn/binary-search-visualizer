@@ -1,0 +1,23 @@
+@import "./body";
+@import "./reset";
+@import "./spacing";
+
+
+
+button {
+    padding: $padding-2;
+    background-color: $light-grey;
+
+    border-radius: $border-radius;
+}
+
+input, input:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    border-radius: $border-radius;
+}
+
+hr {
+    margin-top: .1rem;
+}

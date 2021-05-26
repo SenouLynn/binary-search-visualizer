@@ -1,0 +1,84 @@
+@import "./colors";
+@import "./spacing";
+@import "./flex";
+@import "./grid";
+
+
+.App {
+
+    @include flex-center-start;
+    background-color: $dark-grey;
+    color: $light-grey;
+    min-height: 100vh;
+
+
+    .title {
+        padding: $padding-5;
+    }
+
+
+}
+
+.main-body{
+    padding: $padding-5;
+    border: 2px solid $light-grey;
+    border-radius: $border-radius;
+}
+
+.sub-body{
+    width: $max-width;
+   
+    
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+.sub-body > * > * {
+    
+}
+    .input-box{
+        width: 30%;
+        padding: $padding-4;
+
+        .input-box > div,
+        .input-container> div > * {
+            margin-bottom: .5rem;
+          
+        }
+
+
+    }
+
+    .grid {
+        width: 70%;
+        padding: $padding-4;
+
+        .info-box{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-buttons{
+            display: flex;
+            justify-content: space-between;
+        }
+      }
+.game-type {
+    width: 100%;
+}
+
+.button-box{
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+
+}
+
+.button-box > button {
+    min-width: 45%;
+} 
+
+}
+
+

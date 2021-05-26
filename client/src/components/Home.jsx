@@ -13,13 +13,14 @@ export default function Home() {
     //Set Timer in milliseconds
     let [timer, setTimer] = useState("")
 
+    let [selectState, setSelectState] = useState("")
 
     //Start Button//
     let [startGrid, setStartGrid] = useState()
     function startHandler() {
 
-        setStartGrid ( <Grid rangeMin={parseInt(rangeMin)} rangeMax={parseInt(rangeMax)} initialNum = {parseInt(initialNum)} timer={timer}/> )
-    }   
+        setStartGrid(<Grid rangeMin={parseInt(rangeMin)} rangeMax={parseInt(rangeMax)} initialNum={parseInt(initialNum)} timer={timer} selectState={selectState} />)
+    }
 
     //Disables Start Unless conditions are met
     let disabledVar;
@@ -27,6 +28,8 @@ export default function Home() {
     if (rangeMin &&
         rangeMax &&
         initialNum &&
+        timer &&
+
 
         //Turn all them strings into nums
         parseInt(rangeMin) <= parseInt(initialNum) &&
@@ -39,41 +42,72 @@ export default function Home() {
     }
 
     //Reset Button
-    
+
     function resetBoard() {
         setInitialNum("")
         setRangeMin("")
         setRangeMax("")
         setTimer("")
 
-        setStartGrid ()
+        setStartGrid()
     }
 
+
     return (
-        <div>
-            <div>
-            <p>Set the computer's min and max range</p>
-            <p>Min Range: </p>
-            <input type="number" value={rangeMin} onChange={event => setRangeMin(event.target.value)}></input>
+        <div className="main-body">
+            <div className="sub-body">
+                <div className="input-box">
+                    <div className="input-container">
+                        <div>
 
-            <p>Max Range: </p>
-            <input type="number" value={rangeMax} onChange={event => setRangeMax(event.target.value)}></input>
+                            <p>Min Range: </p>
+                            <input type="number" value={rangeMin} onChange={event => setRangeMin(event.target.value)}></input>
+                        </div>
 
-            <p>Choose your number between the range click "Begin"</p>
-            <input type="number" value={initialNum} onChange={event => setInitialNum(event.target.value)}></input>
+                        <hr></hr>
 
-            <p>How slow would you like the timer to be? Write in seconds: </p>
-            <input type="number" value={timer} onChange={event => setTimer(event.target.value)}></input>
-            <button disabled={disabledVar} onClick={startHandler}>Begin</button>
-    
+                        <div>
+                            <p>Max Range: </p>
+                            <input type="number" value={rangeMax} onChange={event => setRangeMax(event.target.value)}></input>
+                        </div>
+
+                        <hr></hr>
+
+
+                        <div>
+                            <p>Target Number:</p>
+                            <input type="number" value={initialNum} onChange={event => setInitialNum(event.target.value)}></input>
+                        </div>
+
+                        <hr></hr>
+
+                        <div>
+                            <p>Timer Length (secs): </p>
+                            <input type="number" value={timer} onChange={event => setTimer(event.target.value)}></input>
+                        </div>
+
+                        <hr></hr>
+
+                        <div>
+                            <p>Guess Type: </p>
+                            <select className="game-type" value={selectState} onChange={event => setSelectState(event.target.value)}>
+                                <option value="random-num">Random Number Generator</option>
+                                <option value="true-binary">True Binary</option>
+                            </select>
+                        </div>
+
+
+
+                        <div className="button-box">
+                            <button disabled={disabledVar} onClick={startHandler}>Begin</button>
+
+                            <button onClick={resetBoard}>Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                {startGrid}
             </div>
-
-            {startGrid}
-          
-            <div>
-                <button onClick={resetBoard}>Reset</button>
-            </div>
-
         </div>
     )
 }

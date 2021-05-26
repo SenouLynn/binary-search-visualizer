@@ -4,7 +4,7 @@ import Home from './components/Home.jsx'
 function App() {
   return (
     <div className="App">
-      <h1>Binary Search Visualizer</h1>
+      <h3 className="title">Binary Search Visualizer</h3>
       <Home />
 
     </div>

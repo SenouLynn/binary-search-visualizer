@@ -9,6 +9,7 @@ export default function Grid(props) {
     let initialMax = props.rangeMax;
     let initialNum = props.initialNum;
     let timerInput = props.timer * 1000;
+    let selectState = props.selectState
 
 
 
@@ -60,8 +61,6 @@ export default function Grid(props) {
 
     }
     function startSearch() {
-        console.log("You started your search")
-
         //Turns off timer function until loop has run
         setTrigger(false)
 
@@ -70,10 +69,11 @@ export default function Grid(props) {
             setNewMin(initialMin)
             setNewMax(initialMax);
 
-            randomNum()
+            selectState === "random-num" ? randomNum() : trueBinary()
+
 
         } else {
-            randomNum()
+            selectState === "random-num" ? randomNum() : trueBinary()
         }
 
         setTurnCounter(turnCounter + 1)
@@ -131,6 +131,15 @@ export default function Grid(props) {
         showGuess()
     }
 
+    function trueBinary() {
+        newGuess = Math.round((newMax + newMin) / 2)
+
+        setGuessState(newGuess)
+        console.log("randomNum newguess: ", newGuess)
+
+        showGuess()
+    }
+
 
 
     function showGuess() {
@@ -142,9 +151,6 @@ export default function Grid(props) {
         let subMidArray = []
         let showArr = []
         let superMidArray = []
-
-
-
 
         gridArray.forEach((num) => {
 
@@ -175,9 +181,6 @@ export default function Grid(props) {
 
         //Grid Array Reset
         gridArray = []
-
-
-
 
         checkNum()
 
@@ -270,10 +273,7 @@ export default function Grid(props) {
 
 
     return (
-        <div id="grid">
-            <h3>Grid Area</h3>
-            <button onClick={startSearch}>Start Search</button>
-            <button onClick={pauseSearch}>Pause</button>
+        <div className="grid">
             <div className="info-box">
                 <p>Number of turns: {turnCounter}</p>
                 <p>Computer Guess: {guessState}</p>
@@ -281,6 +281,11 @@ export default function Grid(props) {
                 <p>Maximum: {newMax}</p>
             </div>
 
+            <hr></hr>
+            <div className="info-buttons">
+                <button disabled={winCondition ? true : false} onClick={startSearch}>Start Search</button>
+                <button disabled={winCondition ? true : false} onClick={pauseSearch}>Pause</button>
+            </div>
             <Builder gridArray={gridArray} subMinArr={subMinArr} superMaxArr={superMaxArr} subMidArr={subMidArr} middleArr={middleArr} superMidArr={superMidArr} showCaseArr={showCaseArr} isWon={winCondition} showLessThan={showLessThan} showMoreThan={showMoreThan} />
 
         </div>

@@ -18,14 +18,12 @@ export default function Builder(props) {
     let highlightClass = "";
 
     let showLessThan = props.showLessThan
-    let showLessThanClass = ""
-    let showLessThanSymbol = ""
+
 
     let showMoreThan = props.showMoreThan
-    let showMoreThanClass = ""
-    let showMOreThanSymbol = ""
 
-    console.log(isWon)
+
+    //Set up Classes
     if (isWon) {
         highlightClass = "winClass"
     } else if (showLessThan) {
